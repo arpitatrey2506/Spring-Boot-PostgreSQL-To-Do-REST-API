@@ -8,36 +8,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{userId}/tasks")
 public class TaskController {
 
     @Autowired
     private TaskService taskService;
 
-    @GetMapping
+    @GetMapping("/users/{userId}/tasks")
     public List<Task> getAllTasks(@PathVariable Integer userId) {
         return taskService.getAllTasks(userId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{userId}/tasks/{id}")
     public Task getTaskById(@PathVariable Integer userId, @PathVariable int id) {
         return taskService.getTaskById(userId, id);
     }
 
-    @PostMapping
+    @PostMapping("/users/{userId}/tasks")
     public Task addTask(@PathVariable Integer userId, @RequestBody Task task) {
         return taskService.addTask(userId, task);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/users/{userId}/tasks/{id}")
     public Task updateTask(@PathVariable Integer userId,
                            @PathVariable int id,
                            @RequestBody Task task) {
         return taskService.updateTask(userId, id, task);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/{userId}/tasks/{id}")
     public String deleteTask(@PathVariable Integer userId, @PathVariable int id) {
         return taskService.deleteTask(userId, id);
+    }
+
+    @GetMapping("/tasks/search")
+    public List<Task> searchTasksByUserDetail(@RequestParam("identifier") String identifier) {
+        return taskService.getTasksByUserDetail(identifier);
     }
 }

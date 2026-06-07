@@ -2,16 +2,30 @@ package com.example.todo.services;
 
 import com.example.todo.model.Task;
 import com.example.todo.repository.TaskRepository;
+import com.example.todo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Task> getTasksByUserDetail(String identifier) {
+        Optional<com.example.todo.model.User> userOpt = userRepository.findByUserDetail(identifier);
+        if (userOpt.isPresent()) {
+            Integer userId = userOpt.get().getId();
+            return taskRepository.findByUserId(userId);
+        }
+        return java.util.Collections.emptyList();
+    }
 
     public List<Task> getAllTasks(Integer userId) {
         return taskRepository.findByUserId(userId);

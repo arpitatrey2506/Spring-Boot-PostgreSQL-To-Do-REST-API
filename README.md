@@ -63,6 +63,7 @@ All request and response bodies use the application/json format.
 | **POST** | `/users/{userId}/tasks` | Create a new task for a user | Task JSON (omit `id` and `userId`) | Created Task object with DB-assigned ID |
 | **PUT** | `/users/{userId}/tasks/{id}` | Update an existing task for a user | Task JSON (updated properties) | Updated Task object (or `null`) |
 | **DELETE** | `/users/{userId}/tasks/{id}` | Delete a task for a user | *None* | Status string (`"Task Deleted"`) |
+| **GET** | `/tasks/search` | Search tasks using any user detail (`id`, `name`, `address`, `email`) as query parameter `identifier` | *None* | Array of Task objects |
 
 ### Example Payloads
 
