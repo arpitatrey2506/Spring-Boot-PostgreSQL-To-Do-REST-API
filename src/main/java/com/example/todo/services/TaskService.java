@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -18,13 +17,8 @@ public class TaskService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Task> getTasksByUserDetail(String identifier) {
-        Optional<com.example.todo.model.User> userOpt = userRepository.findByUserDetail(identifier);
-        if (userOpt.isPresent()) {
-            Integer userId = userOpt.get().getId();
-            return taskRepository.findByUserId(userId);
-        }
-        return java.util.Collections.emptyList();
+    public List<Task> getTasksByUserId(Integer userId) {
+        return taskRepository.findByUserId(userId);
     }
 
     public List<Task> getAllTasks(Integer userId) {
@@ -32,6 +26,20 @@ public class TaskService {
     }
 
     public Task addTask(Integer userId, Task task) {
+        // 1. Check if user already exists 
+        boolean userExists = userRepository.existsById(userId);
+
+        if (!userExists) {
+            // 2. Retrieve provided user details for first-time registration
+            com.example.todo.model.User newUser = task.getUserDetails();
+            if (newUser == null) {
+                throw new IllegalArgumentException("User with ID " + userId + " does not exist. Please provide 'userDetails' in the body to register the user.");
+            }
+            // 3. Save the new user record to the database
+            userRepository.insertUser(userId, newUser.getName(), newUser.getAddress(), newUser.getEmail());
+        }
+
+        // 4. Save the task normally
         task.setId(null);
         task.setUserId(userId);
         return taskRepository.save(task);

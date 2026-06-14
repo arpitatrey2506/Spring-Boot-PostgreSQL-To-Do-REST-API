@@ -41,7 +41,7 @@ public class TaskController {
     }
 
     @GetMapping("/tasks/search")
-    public List<Task> searchTasksByUserDetail(@RequestParam("identifier") String identifier) {
-        return taskService.getTasksByUserDetail(identifier);
+    public List<Task> searchTasksByUserId(@RequestParam("userId") Integer userId) {
+        return taskService.getTasksByUserId(userId);
     }
 }

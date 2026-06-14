@@ -63,24 +63,47 @@ All request and response bodies use the application/json format.
 | **POST** | `/users/{userId}/tasks` | Create a new task for a user | Task JSON (omit `id` and `userId`) | Created Task object with DB-assigned ID |
 | **PUT** | `/users/{userId}/tasks/{id}` | Update an existing task for a user | Task JSON (updated properties) | Updated Task object (or `null`) |
 | **DELETE** | `/users/{userId}/tasks/{id}` | Delete a task for a user | *None* | Status string (`"Task Deleted"`) |
-| **GET** | `/tasks/search` | Search tasks using any user detail (`id`, `name`, `address`, `email`) as query parameter `identifier` | *None* | Array of Task objects |
+| **GET** | `/tasks/search` | Search tasks for a user by their ID | *None* | Array of Task objects |
 
 ### Example Payloads
 
-#### **Add Task (POST `/users/1/tasks`)**
+#### **Add Task for Existing User (POST `/users/1/tasks`)**
 **Request Body:**
 ```json
 {
-  "title": "Learn Spring Boot & Docker",
+  "title": "Task for existing user",
   "completed": false
 }
-```
+```    
 **Response Body (200 OK):**
 ```json
 {
   "id": 1,
   "userId": 1,
-  "title": "Learn Spring Boot & Docker",
+  "title": "Task for existing user",
+  "completed": false
+}
+```
+
+#### **Add Task for New User / First Time (POST `/users/2/tasks`)**
+**Request Body:**
+```json
+{
+  "title": "My first task",
+  "completed": false,
+  "userDetails": {
+    "name": "Jane Smith",
+    "address": "San Francisco",
+    "email": "jane.smith@gmail.com"
+  }
+}
+```
+**Response Body (200 OK):**
+```json
+{
+  "id": 2,
+  "userId": 2,
+  "title": "My first task",
   "completed": false
 }
 ```
@@ -89,7 +112,7 @@ All request and response bodies use the application/json format.
 **Request Body:**
 ```json
 {
-  "title": "Learn Spring Boot & Docker",
+  "title": "Updated task title",
   "completed": true
 }
 ```
@@ -98,7 +121,7 @@ All request and response bodies use the application/json format.
 {
   "id": 1,
   "userId": 1,
-  "title": "Learn Spring Boot & Docker",
+  "title": "Updated task title",
   "completed": true
 }
 ```
